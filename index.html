@@ -217,7 +217,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.9rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .btn {
@@ -290,6 +290,52 @@
 
     .hero-meta span {
       color: var(--accent-soft);
+    }
+
+    /* COPY CA */
+
+    .ca-box {
+      margin-bottom: 1.6rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.95rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+
+    .ca-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .ca-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color: var(--accent-soft);
+      max-width: 230px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .btn-copy {
+      padding: 0.35rem 0.9rem;
+      font-size: 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-soft);
+      background: rgba(255, 102, 0, 0.12);
+      color: var(--accent-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+    }
+
+    .btn-copy:hover {
+      background: rgba(255, 102, 0, 0.2);
     }
 
     /* Hero card */
@@ -590,6 +636,7 @@
   <header>
     <div class="nav">
       <div class="nav-left">
+        <!-- Logo -->
         <img src="logo.png" alt="XMR2 logo" class="logo" />
         <div class="brand-text">
           <span class="brand-title">XMR2</span>
@@ -603,6 +650,7 @@
         <a href="#get-started">Get Started</a>
         <a href="#wallets">Wallets</a>
         <a href="#resources">Resources</a>
+        <!-- Community naar X -->
         <a href="https://x.com" target="_blank" rel="noopener noreferrer">Community</a>
         <a href="#downloads" class="nav-cta">Download</a>
       </nav>
@@ -623,6 +671,8 @@
             Fully fungible, censorship-resistant and borderless digital cash. 
             Send and receive value without exposing your financial history to the world.
           </p>
+
+          <!-- Buttons: Get Wallet / What is XMR2? / Buy on DEX -->
           <div class="hero-buttons">
             <a href="#downloads" class="btn btn-primary">Get Wallet</a>
             <a href="#learn" class="btn btn-outline">What is XMR2?</a>
@@ -630,6 +680,14 @@
               Buy on DEX
             </a>
           </div>
+
+          <!-- Copy CA direct onder de knoppen -->
+          <div class="ca-box">
+            <span class="ca-label">CA</span>
+            <span class="ca-code" id="xmr2-ca">0xYOUR_CONTRACT_ADDRESS_HERE</span>
+            <button class="btn-copy" type="button" data-copy-target="xmr2-ca">Copy CA</button>
+          </div>
+
           <div class="hero-meta">
             <div>Open source &bull; <span>Community driven</span></div>
             <div>Launched &bull; <span>No pre-mine, no ICO</span></div>
@@ -809,6 +867,7 @@
         </p>
 
         <div class="feature-grid">
+
           <article class="feature-card">
             <h3>Desktop (GUI)</h3>
             <p>Full node with graphical interface for Windows, macOS, and Linux.</p>
@@ -840,6 +899,7 @@
               View Checksums
             </a>
           </article>
+
         </div>
       </div>
     </section>
@@ -893,6 +953,7 @@
   </footer>
 
   <script>
+    // Mobile nav toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
 
@@ -900,7 +961,30 @@
       navLinks.classList.toggle('show');
     });
 
+    // Dynamic year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Copy CA button
+    document.querySelectorAll('.btn-copy').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const targetId = btn.getAttribute('data-copy-target');
+        const el = document.getElementById(targetId);
+        if (!el) return;
+
+        const text = el.textContent.trim();
+
+        try {
+          await navigator.clipboard.writeText(text);
+          const original = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => {
+            btn.textContent = original;
+          }, 1500);
+        } catch (e) {
+          console.error('Copy failed', e);
+        }
+      });
+    });
   </script>
 </body>
 </html>
