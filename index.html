@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>XMR2 - secure, private, borderless</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <style>
+    :root {
+      --accent: #ff6600;
+      --accent-soft: #ffb380;
+      --bg: #14151a;
+      --bg-alt: #1b1c23;
+      --text: #f5f5f5;
+      --muted: #b3b3b3;
+      --border: #2b2c35;
+      --max-width: 1100px;
+      --radius: 8px;
+      --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #232430 0, #0e0f13 55%, #050509 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      padding: 4rem 0;
+    }
+
+    /* Header / nav */
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(5, 6, 10, 0.9);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      object-fit: cover;
+      box-shadow: 0 0 0 2px #111, 0 0 20px rgba(255, 102, 0, 0.5);
+    }
+
+    .brand-title {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 0.1rem;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.2s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-soft);
+      background: rgba(255, 102, 0, 0.12);
+      color: var(--accent-soft);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      box-shadow: 0 0 18px rgba(255, 102, 0, 0.35);
+    }
+
+    .nav-cta:hover {
+      background: rgba(255, 102, 0, 0.2);
+      text-decoration: none;
+    }
+
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Hero */
+
+    .hero {
+      padding: 3.5rem 0 1.5rem;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.6fr);
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.18rem 0.75rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.9rem;
+      background: radial-gradient(circle at left, rgba(255, 102, 0, 0.3), transparent 60%);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #26c165;
+      box-shadow: 0 0 12px rgba(38, 193, 101, 0.85);
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 4vw, 3.1rem);
+      line-height: 1.05;
+      margin-bottom: 0.9rem;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 0.98rem;
+      max-width: 32rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      border-radius: 999px;
+      padding: 0.7rem 1.4rem;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background: linear-gradient(145deg, #ff7a1a, #ff3c00);
+      color: #111;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent-soft);
+      text-decoration: none;
+    }
+
+    /* small button variant for downloads */
+    .btn-sm {
+      padding: 0.45rem 1rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 999px;
+    }
+
+    .btn-buy {
+      border-color: var(--accent);
+      color: var(--accent-soft);
+      background: rgba(255, 102, 0, 0.05);
+    }
+
+    .btn-buy:hover {
+      background: rgba(255, 102, 0, 0.18);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .hero-meta span {
+      color: var(--accent-soft);
+    }
+
+    /* Hero card */
+
+    .hero-card {
+      background: radial-gradient(circle at top, #2b2c3a 0, #161720 40%, #101116 100%);
+      border-radius: 18px;
+      padding: 1.8rem 1.5rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 999px;
+      padding: 0.18rem 0.6rem;
+      background: rgba(38, 193, 101, 0.12);
+      color: #91e3b4;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .status-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #26c165;
+    }
+
+    .hero-chart {
+      height: 130px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.75rem;
+      background: radial-gradient(circle at bottom, rgba(255, 102, 0, 0.12), transparent 60%);
+      position: relative;
+      margin-bottom: 1.1rem;
+    }
+
+    .hero-chart-line {
+      position: absolute;
+      inset: 1.1rem 0.9rem 0.9rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(255, 102, 0, 0.1), rgba(255, 102, 0, 0.6));
+      clip-path: path("M0,70 C40,50 65,90 100,50 C135,15 170,30 200,20 C230,14 265,35 300,15");
+      opacity: 0.9;
+    }
+
+    .hero-card-footer {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .stat-tile {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 0.6rem 0.7rem;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+
+    .stat-tag {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--accent-soft);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 34rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.3rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .feature-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-soft);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.5fr);
+      gap: 2.5rem;
+    }
+
+    .list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .list li {
+      display: flex;
+      gap: 0.7rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .list li::before {
+      content: "•";
+      color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1.2;
+    }
+
+    .pill-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .pill-links a {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.8rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .pill-links a:hover {
+      border-color: var(--accent);
+      color: var(--accent-soft);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: #050509;
+      padding: 2.5rem 0 2rem;
+      margin-top: 3rem;
+      font-size: 0.85rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 2rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .footer-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 0.9rem;
+      color: var(--muted);
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 0.4rem;
+    }
+
+    .footer-col a {
+      color: var(--text);
+      font-size: 0.86rem;
+      text-decoration: none;
+    }
+
+    .footer-col a:hover {
+      color: var(--accent-soft);
+    }
+
+    .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .hero-card {
+        order: -1;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        inset: 52px 0 auto;
+        flex-direction: column;
+        background: #050509;
+        padding: 0.8rem 1.5rem 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .hero {
+        padding-top: 2.4rem;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header / nav -->
+  <header>
+    <div class="nav">
+      <div class="nav-left">
+        <img src="logo.png" alt="XMR2 logo" class="logo" />
+        <div class="brand-text">
+          <span class="brand-title">XMR2</span>
+          <span class="brand-sub">Private digital cash</span>
+        </div>
+      </div>
+
+      <button class="nav-toggle" aria-label="Toggle navigation" id="navToggle">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#get-started">Get Started</a>
+        <a href="#wallets">Wallets</a>
+        <a href="#resources">Resources</a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer">Community</a>
+        <a href="#downloads" class="nav-cta">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>Privacy-first cryptocurrency</span>
+          </div>
+          <h1>XMR2 Means <span>Money</span></h1>
+          <p class="hero-sub">
+            Fully fungible, censorship-resistant and borderless digital cash. 
+            Send and receive value without exposing your financial history to the world.
+          </p>
+          <div class="hero-buttons">
+            <a href="#downloads" class="btn btn-primary">Get Wallet</a>
+            <a href="#learn" class="btn btn-outline">What is XMR2?</a>
+            <a href="https://dex.example.com" class="btn btn-outline btn-buy" target="_blank" rel="noopener noreferrer">
+              Buy on DEX
+            </a>
+          </div>
+          <div class="hero-meta">
+            <div>Open source &bull; <span>Community driven</span></div>
+            <div>Launched &bull; <span>No pre-mine, no ICO</span></div>
+          </div>
+        </div>
+
+        <aside class="hero-card" aria-label="Network overview">
+          <div class="hero-card-header">
+            <div>
+              <div style="font-size:0.8rem;color:var(--muted)">Network status</div>
+              <div style="font-weight:600;font-size:0.95rem;">XMR2 mainnet</div>
+            </div>
+            <div class="status-pill">
+              <div class="status-pill-dot"></div>
+              <span>Online</span>
+            </div>
+          </div>
+
+          <div class="hero-chart">
+            <div class="hero-chart-line"></div>
+          </div>
+
+          <div class="hero-card-footer">
+            <div class="stat-tile">
+              <div class="stat-label">Circulating supply</div>
+              <div class="stat-value">18.1 M XMR2</div>
+              <div class="stat-tag">Dynamic block reward</div>
+            </div>
+            <div class="stat-tile">
+              <div class="stat-label">Avg. fee</div>
+              <div class="stat-value">&lt; 0.01 XMR2</div>
+              <div class="stat-tag">Low & predictable</div>
+            </div>
+            <div class="stat-tile">
+              <div class="stat-label">Privacy</div>
+              <div class="stat-value">On by default</div>
+              <div class="stat-tag">No opt-in leaks</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Get started -->
+    <section id="get-started">
+      <div class="container">
+        <h2 class="section-title">Get Started</h2>
+        <p class="section-subtitle">
+          Everything you need to start using truly private money.
+          Choose a wallet, get some coins, and send your first transaction in minutes.
+        </p>
+
+        <div class="feature-grid">
+          <article class="feature-card" id="wallets">
+            <div class="feature-label">Step 1</div>
+            <h3>Choose a Wallet</h3>
+            <p>
+              Download a desktop or mobile wallet and keep control of your own keys.
+              No accounts, no sign-ups, no central party.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-label">Step 2</div>
+            <h3>Get Some Coins</h3>
+            <p>
+              Acquire XMR2 on exchanges, earn it for your work, or mine it at home.
+              Once it’s in your wallet, it’s under your control.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-label">Step 3</div>
+            <h3>Use It Like Cash</h3>
+            <p>
+              Pay merchants, friends, or family anywhere in the world.
+              Transactions are fast, borderless, and designed to stay private.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-label">Help Out</div>
+            <h3>Contribute to the Project</h3>
+            <p>
+              XMR2 is built by volunteers.
+              Developers, writers, designers, translators and reviewers are all welcome.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Learn & resources -->
+    <section id="learn">
+      <div class="container two-col">
+        <div>
+          <h2 class="section-title">What makes XMR2 different?</h2>
+          <p class="section-subtitle">
+            XMR2 uses modern cryptography to hide senders, receivers, and amounts 
+            on every transaction, without giving up decentralization.
+          </p>
+          <ul class="list">
+            <li>Every coin looks the same on-chain, preserving true fungibility.</li>
+            <li>Default privacy: you don’t have to remember to turn anything on.</li>
+            <li>Open codebase with reproducible builds and peer-reviewed research.</li>
+            <li>CPU-friendly mining to keep the network widely distributed.</li>
+          </ul>
+        </div>
+
+        <div id="resources">
+          <h2 class="section-title">Guides & Resources</h2>
+          <p class="section-subtitle">
+            Learn how to use XMR2, run your own node, and integrate it into services.
+          </p>
+          <div class="feature-grid" style="grid-template-columns: repeat(2,minmax(0,1fr));">
+            <article class="feature-card">
+              <h3>User Guides</h3>
+              <p>Step-by-step tutorials for installing wallets, backing up keys, and sending your first transaction.</p>
+            </article>
+            <article class="feature-card">
+              <h3>Developer Docs</h3>
+              <p>RPC references, integration examples, and best practices for building on top of XMR2.</p>
+            </article>
+            <article class="feature-card">
+              <h3>Research Papers</h3>
+              <p>Explore the cryptography behind ring signatures, stealth addresses, and confidential amounts.</p>
+            </article>
+            <article class="feature-card">
+              <h3>Knowledge Base</h3>
+              <p>A curated glossary explaining key concepts, from nodes and fees to consensus and privacy.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Community -->
+    <section id="community">
+      <div class="container two-col">
+        <div>
+          <h2 class="section-title">Join the Community</h2>
+          <p class="section-subtitle">
+            XMR2 is not a company. It’s an idea maintained by a global community that believes
+            financial privacy should be accessible to everyone.
+          </p>
+          <ul class="list">
+            <li>Participate in open discussions about protocol upgrades and governance.</li>
+            <li>Help newcomers stay safe and avoid common privacy mistakes.</li>
+            <li>Translate documentation and interfaces into your language.</li>
+            <li>Contribute code, tests, or reviews to the open-source repositories.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="section-title">Where to find us</h2>
+          <p class="section-subtitle">
+            Join the conversation across various platforms. Choose the ones that fit your style.
+          </p>
+          <div class="pill-links">
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            <a href="#">Developer chat</a>
+            <a href="#">Community forum</a>
+            <a href="#">Matrix / IRC</a>
+            <a href="#">Mailing list</a>
+            <a href="#">Support channels</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Downloads -->
+    <section id="downloads">
+      <div class="container">
+        <h2 class="section-title">Download Wallets</h2>
+        <p class="section-subtitle">
+          Choose the official desktop or mobile wallet, verify the checksums, and you’re ready to go.
+        </p>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Desktop (GUI)</h3>
+            <p>Full node with graphical interface for Windows, macOS, and Linux.</p>
+            <a href="https://www.getmonero.org/downloads/" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              Download GUI
+            </a>
+          </article>
+
+          <article class="feature-card">
+            <h3>Desktop (CLI)</h3>
+            <p>Command-line tools for power users, servers, and advanced setups.</p>
+            <a href="https://www.getmonero.org/downloads/" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              Download CLI
+            </a>
+          </article>
+
+          <article class="feature-card">
+            <h3>Mobile Wallets</h3>
+            <p>Lightweight clients for iOS and Android, ideal for daily spending.</p>
+            <a href="https://www.getmonero.org/downloads/" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              Download Mobile
+            </a>
+          </article>
+
+          <article class="feature-card">
+            <h3>Verify Downloads</h3>
+            <p>PGP signatures and hashes so you can confirm you got the genuine binaries.</p>
+            <a href="https://www.getmonero.org/downloads/" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+              View Checksums
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-title">Project</div>
+          <ul>
+            <li><a href="#">About XMR2</a></li>
+            <li><a href="#">Roadmap</a></li>
+            <li><a href="#">Brand assets</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-title">Learn</div>
+          <ul>
+            <li><a href="#">Frequently Asked Questions</a></li>
+            <li><a href="#">User Guides</a></li>
+            <li><a href="#">Developer Docs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-title">Community</div>
+          <ul>
+            <li><a href="https://x.com" target="_blank" rel="noopener noreferrer">X (Twitter)</a></li>
+            <li><a href="#">Contribution ideas</a></li>
+            <li><a href="#">Funding proposals</a></li>
+            <li><a href="#">Research group</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-title">Network</div>
+          <ul>
+            <li><a href="#">Node list</a></li>
+            <li><a href="#">Block explorers</a></li>
+            <li><a href="#">Source code</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© <span id="year"></span> XMR2 Project</div>
+        <div>Open-source software &middot; No warranties &middot; Verify everything</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
